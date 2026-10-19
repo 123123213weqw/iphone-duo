@@ -210,7 +210,7 @@ function rebuildDims() {
   dimGroup.add(line([[x0, wy, zFront], [x1, wy, zFront]]));
   dimGroup.add(line([[x0, wy - 3.4, zFront], [x0, wy + 3.4, zFront]], DIM_TICK));
   dimGroup.add(line([[x1, wy - 3.4, zFront], [x1, wy + 3.4, zFront]], DIM_TICK));
-  const wl = dimLabel(`${dims.wAll.toFixed(1)} mm`);
+  const wl = dimLabel(`${mm(dims.w)} mm`);
   wl.position.set((x0 + x1) / 2, wy - 7.5, zFront);
   dimGroup.add(wl);
 
@@ -219,7 +219,7 @@ function rebuildDims() {
   dimGroup.add(line([[hx, y1, zFront], [hx, y0, zFront]]));
   dimGroup.add(line([[hx - 3.4, y1, zFront], [hx + 3.4, y1, zFront]], DIM_TICK));
   dimGroup.add(line([[hx - 3.4, y0, zFront], [hx + 3.4, y0, zFront]], DIM_TICK));
-  const hl = dimLabel(`${dims.hAll.toFixed(1)} mm`);
+  const hl = dimLabel(`${mm(dims.h)} mm`);
   hl.position.set(hx + 22, (y0 + y1) / 2, zFront);
   dimGroup.add(hl);
 
@@ -227,7 +227,7 @@ function rebuildDims() {
   const z0 = box.min.z;
   const z1 = box.max.z;
   dimGroup.add(line([[x0 - 9, y0 - 2, z0], [x0 - 9, y0 - 2, z1]]));
-  const dl = dimLabel(`${dims.d.toFixed(1)} mm`);
+  const dl = dimLabel(`${mm(dims.d)} mm`);
   dl.scale.set(46, 11.5, 1);
   dl.position.set(x0 - 9, y0 - 12, (z0 + z1) / 2);
   dimGroup.add(dl);
@@ -248,6 +248,8 @@ function updateDims(force = false) {
 const foldInput = document.getElementById('fold');
 const angleOut = document.getElementById('angle');
 const readout = document.getElementById('dimreadout');
+// 0.1 mm, half-up (toFixed() truncates 82.35 -> 82.3 because of float error)
+const mm = (v) => (Math.round((v + 1e-6) * 10) / 10).toFixed(1);
 
 let foldAnim = null;
 let camAnim = null;
@@ -256,7 +258,7 @@ function setReadout() {
   const d = api.getDims();
   const deg = api.fold;
   angleOut.innerHTML = `${deg.toFixed(0)}° <small>${deg > 175 ? 'open' : deg < 5 ? 'closed' : 'flex'}</small>`;
-  readout.textContent = `${d.wAll.toFixed(1)} × ${d.hAll.toFixed(1)} × ${d.d.toFixed(1)} mm`;
+  readout.textContent = `${mm(d.w)} × ${mm(d.h)} × ${mm(d.d)} mm`;
 }
 
 function setFold(deg, animate = true) {

@@ -5,6 +5,8 @@
 
 ![hero](renders/final_hero.png)
 
+**在线预览：<https://123123213weqw.github.io/iphone-duo/>**（GitHub Pages，纯静态）
+
 ## 尺寸规格
 
 | 状态 | 宽 × 高 × 厚 (mm) | 说明 |
