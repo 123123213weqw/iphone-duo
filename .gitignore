@@ -1,0 +1,10 @@
+# Apple marketing assets pulled from apple.com for reference only — not redistributed.
+ref/
+
+# Local edit backups and intermediate renders.
+.bak/
+renders/_wip/
+
+# OS / editor noise
+.DS_Store
+*.swp
