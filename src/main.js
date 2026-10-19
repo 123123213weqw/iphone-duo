@@ -274,10 +274,32 @@ function setFold(deg, animate = true) {
   foldAnim = { from: api.fold, to: target, t0: performance.now(), dur: 820 };
 }
 
+// The phone must always fit the viewport: on a portrait/square window the fixed
+// preset distances crop it, so every camera move is clamped to a fit distance.
+const FRAME = { halfW: SPEC.open.w / 2, halfH: SPEC.h / 2, margin: 1.08 };
+function minCameraDistance() {
+  const vHalf = THREE.MathUtils.degToRad(camera.fov / 2);
+  const hHalf = Math.atan(Math.tan(vHalf) * camera.aspect);
+  return Math.max(
+    (FRAME.halfW * FRAME.margin) / Math.tan(hHalf),
+    (FRAME.halfH * FRAME.margin) / Math.tan(vHalf),
+  );
+}
+// push the camera out along its current direction until the model fits
+function enforceFit() {
+  const dir = camera.position.clone().sub(controls.target);
+  const need = minCameraDistance();
+  if (dir.length() < need) {
+    camera.position.copy(controls.target).add(dir.setLength(need));
+  }
+}
+
 function flyTo(pos, target = [0, 0, 0], dur = 950) {
+  const to = new THREE.Vector3(...pos);
+  to.setLength(Math.max(to.length(), minCameraDistance()));
   camAnim = {
     fromPos: camera.position.clone(),
-    toPos: new THREE.Vector3(...pos),
+    toPos: to,
     fromTgt: controls.target.clone(),
     toTgt: new THREE.Vector3(...target),
     t0: performance.now(),
@@ -305,6 +327,8 @@ foldInput.addEventListener('input', () => {
   const v = Number(foldInput.value);
   foldAnim = null;
   api.setFold(v);
+  // dragging the slider means the pose is now custom: drop the preset highlight
+  document.querySelectorAll('[data-pose]').forEach((b) => b.classList.remove('on'));
   setReadout();
   updateDims();
 });
@@ -401,6 +425,7 @@ function resize() {
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
   renderer.setSize(w, h);
+  enforceFit();
 }
 window.addEventListener('resize', resize);
 resize();

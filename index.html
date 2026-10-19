@@ -144,7 +144,9 @@
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   @media (max-width: 760px) {
-    .top { top: 18px; left: 18px; max-width: 70vw; }
+    /* stack: copy / canvas / dock — the model never sits behind the text */
+    #app { grid-template-rows: auto minmax(0, 1fr) auto; }
+    .top { position: static; max-width: none; padding: 16px 18px 4px; }
     .hint { display: none; }
     .dock { margin-bottom: 12px; padding: 12px; border-radius: 18px; gap: 10px; }
     .sep { display: none; }
@@ -154,24 +156,24 @@
 </head>
 <body>
 <div id="app">
-  <div id="viewport">
-    <div class="top">
-      <div class="eyebrow">Apple · Concept model</div>
-      <h1>iPhone Duo <span>/ fold</span></h1>
-      <p class="sub">按官方 2026 年规格 1:1 建模的折叠 iPhone。两块面板、隐藏式铰链、双层屏幕与相机凸台全部由参数生成。</p>
-      <div class="specs">
-        <span class="chip">展开 <b>164.6 × 117.8 × 5.2 mm</b></span>
-        <span class="chip">折叠 <b>82.4 × 117.8 × 11.3 mm</b></span>
-        <span class="chip">内屏 <b>7.6″ 1878×2670</b></span>
-        <span class="chip">外屏 <b>5.4″ 1398×2034</b></span>
-        <span class="chip">重量 <b>254 g</b></span>
-      </div>
-    </div>
-    <div class="hint">
-      拖拽旋转 · 滚轮缩放<br />
-      <kbd>1</kbd> 展开 <kbd>2</kbd> 折叠 <kbd>3</kbd> 背面 <kbd>D</kbd> 尺寸
+  <div class="top">
+    <div class="eyebrow">Apple · Concept model</div>
+    <h1>iPhone Duo <span>/ fold</span></h1>
+    <p class="sub">按官方 2026 年规格 1:1 建模的折叠 iPhone。两块面板、隐藏式铰链、双层屏幕与相机凸台全部由参数生成。</p>
+    <div class="specs">
+      <span class="chip">展开 <b>164.6 × 117.8 × 5.2 mm</b></span>
+      <span class="chip">折叠 <b>82.4 × 117.8 × 11.3 mm</b></span>
+      <span class="chip">内屏 <b>7.6″ 1878×2670</b></span>
+      <span class="chip">外屏 <b>5.4″ 1398×2034</b></span>
+      <span class="chip">重量 <b>254 g</b></span>
     </div>
   </div>
+  <div class="hint">
+    拖拽旋转 · 滚轮缩放<br />
+    <kbd>1</kbd> 展开 <kbd>2</kbd> 折叠 <kbd>3</kbd> 背面 <kbd>D</kbd> 尺寸
+  </div>
+
+  <div id="viewport"></div>
 
   <div class="dock">
     <div class="group">
